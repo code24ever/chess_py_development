@@ -1,5 +1,5 @@
 import pygame
-from components.pieces_cls import BlackPawns, WhitePawns , Rooks, Bishops, Knights, Kings, Queens
+from components.pieces_cls import *
 
 tile_size = 120
 round_int = 0
@@ -125,11 +125,7 @@ def main():
 
     # DOENST WORK QUIET YET !!!!!!!!!!! 
 
-    if white_is_checked:
-        pygame.draw.rect(screen, (247, 87, 87), [King_white.x, King_white.y, tile_size, tile_size])
-    
-    elif black_is_checked:
-        pygame.draw.rect(screen, (247, 87, 87), [King_black.x, King_black.y, tile_size, tile_size])
+
 
     # round_int = 0 
 
@@ -156,6 +152,13 @@ def main():
                         pygame.draw.rect(screen, (176, 142, 109), [x*tile_size, y*tile_size, tile_size, tile_size])
                     else:
                         pygame.draw.rect(screen, (245, 216, 188), [x*tile_size, y*tile_size, tile_size, tile_size])
+
+
+        if white_is_checked:
+            pygame.draw.rect(screen, (247, 87, 87), [King_white.x, King_white.y, tile_size, tile_size])
+    
+        elif black_is_checked:
+            pygame.draw.rect(screen, (247, 87, 87), [King_black.x, King_black.y, tile_size, tile_size])
 
         #draw all the pieces
         for pieces in all_pieces_list:
@@ -187,6 +190,7 @@ def main():
                         if mouse_pos[0] < piece.x+tile_size and mouse_pos[1] < piece.y+tile_size:
                             from components.pieces_cls import round_int
                             if round_int % 2 == 1 and piece.farbe == (0,0,0) or round_int % 2 == 0 and piece.farbe == (255, 255, 255):
+
                                 if (white_is_checked or black_is_checked) and str(type(piece)) == "<class 'components.pieces_cls.Kings'>":
                                     piece.move(occupied_tiles=occupied_tiles, all_pieces_list = all_pieces_list)
 
@@ -196,15 +200,18 @@ def main():
                                 else:
                                     piece.move(occupied_tiles=occupied_tiles, all_pieces_list = all_pieces_list)
 
+
                                 for white_king in all_pieces_list:
                                     if str(type(white_king)) == "<class 'components.pieces_cls.Kings'>" and white_king.farbe == (255, 255, 255):
                                         for piece in all_pieces_list:
                                             if piece != white_king and piece.farbe != white_king.farbe:
                                                 if (white_king.x, white_king.y) in piece.attacted_tiles(all_pieces_list = all_pieces_list):
                                                     white_is_checked = True
+                                                    checking_piece = piece
                                                     break
                                                 else:
                                                     white_is_checked = False
+                                                    checking_piece = None
 
                                 for black_king in all_pieces_list:
                                     if str(type(black_king)) == "<class 'components.pieces_cls.Kings'>" and black_king.farbe == (0, 0, 0):
@@ -212,9 +219,11 @@ def main():
                                             if piece != black_king and piece.farbe != black_king.farbe:
                                                 if (black_king.x, black_king.y) in piece.attacted_tiles(all_pieces_list = all_pieces_list):
                                                     black_is_checked = True
+                                                    checking_piece = piece
                                                     break
                                                 else:
                                                     black_is_checked = False
+                                                    checking_piece = None
 
                                 if white_is_checked or black_is_checked:
                                     print('Someone is checked')
